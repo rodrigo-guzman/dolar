@@ -1,8 +1,11 @@
-const fetch = require('node-fetch');
+const express = require('express')
+const app = express()
 
+const fetch = require('node-fetch');
 const apiKey = 'BEARER eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDI0MjYzNDMsInR5cGUiOiJleHRlcm5hbCIsInVzZXIiOiJyb2RyaWdvZ2FzdG9uZ3V6bWFuQGdtYWlsLmNvbSJ9.YJwr1nI9001SW6Yb2p2svbA6EyjJQlK955IggpiIyQCrUenhj3pywmvOSap6gt4P3OCw2mULXEfWNoJYWf7VPA';
 let consult = 'usd_of_minorista'
 let dayNow = '2019-10-11'
+
 
 async function getDolarBCRA() 
 {   
@@ -26,8 +29,18 @@ async function getDolarBCRA()
         {
             let filteredProducts = getFilteredByKey(json, "d", dayNow);
             console.log(filteredProducts);
+            return filteredProducts;
         }
 };
+
+app.get('/',async function (req, res) {
+    let jsonObtenido = await getDolarBCRA();
+    res.send('Fecha: ' + jsonObtenido[0].d + ' | Valor del dolar: ' + jsonObtenido[0].v);
+  });
+
+app.listen(3000,() => {
+    console.log('Conect to port 3000')
+})
 
 function getFilteredByKey(array, key, value) {
     return array.filter(function(e) {
@@ -36,4 +49,3 @@ function getFilteredByKey(array, key, value) {
   }
 
   
-getDolarBCRA();
